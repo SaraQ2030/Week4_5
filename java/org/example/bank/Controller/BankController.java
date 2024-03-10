@@ -32,25 +32,35 @@ public class BankController {
     customer.remove(index);
     return new ApiMessage("Data Deleted");
 }
-@PutMapping("/depo")
-    public ApiMessage deposit(@RequestBody int amount ,Bank bank){
-        int new_Balance=0;
-        if(amount>0){
-            new_Balance=amount+bank.getBalance();
+@PutMapping("/depo/{id}/{amount}")
+    public ApiMessage deposit(@PathVariable int id ,@PathVariable int amount) {
+    for (Bank c : customer) {
+        if (c.getId() == id) {
+            if (amount > 0) {
+           int new_balance=0;
+           new_balance=c.getBalance()+amount;
+                c.setBalance(new_balance);
+                return new ApiMessage("Successfully transaction the new balance =  " + c.getBalance());
+             }
         }
-        return new ApiMessage("Successfull transiction  "+new_Balance);
     }
+        return new ApiMessage("The customer not found");
+
+}
+@PutMapping("with/{id}/{amount}")
+public ApiMessage withdraw(@PathVariable int id,@PathVariable int amount){
+    for (Bank c:customer){
+        if (c.getId()==id){
+            if (c.getBalance()>amount){
+                int new_balance=0;
+                new_balance=c.getBalance()-amount;
+                c.setBalance(new_balance);
+                return new ApiMessage("Successful withdraw " + c.getBalance());
+            }
+        }
+    }return new ApiMessage("Customer not found ");
+}
 
 
 
-//    public int credit(int amount){
-//        if(amount>Balance){
-//            System.out.printf("The balance is low");
-//        }else if(amount<=Balance){
-//            Balance=Balance-amount;
-////        System.out.println("The updated balance : "+new_Balance);
-//        }
-//
-//        return Balance;
-//    }
 }

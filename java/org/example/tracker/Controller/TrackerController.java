@@ -35,10 +35,10 @@ public class TrackerController {
         return new ApiMessage("Deleted successfully");
     }
 
-@GetMapping("/search")
-    public ApiMessage searchTrack(@RequestBody Tracker tit) {
+@GetMapping("/search/{tit}")
+    public ApiMessage searchTrack(@PathVariable String tit) {
     for (Tracker t : trackers) {
-        if (t.getTitle().equalsIgnoreCase(tit.getTitle()))
+        if (t.getTitle().equalsIgnoreCase(tit))
             return new ApiMessage("is found  " + t);
 
     }
@@ -46,15 +46,14 @@ public class TrackerController {
 
 }
 
-@PutMapping("/change")
-public ApiMessage changeStatus(@RequestBody Tracker status) {
-    for (Tracker tra : trackers) {
-        if (tra.getStatus().equalsIgnoreCase(status.getStatus())) {
-            return new ApiMessage("the Status Already done");
-        } else {
-            tra.setStatus("done");
-        }
+@PutMapping("/change/{index}")
+public ApiMessage changeStatus(@PathVariable int index) {
+
+      if(trackers.get(index).getStatus().equalsIgnoreCase("done")) {
+        return new ApiMessage("the Status Already done");
     }
+      else{
+          trackers.get(index).setStatus("done"); }
     return new ApiMessage("End change");
 }
 
